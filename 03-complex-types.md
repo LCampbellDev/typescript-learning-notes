@@ -34,7 +34,12 @@ This question first arose while debugging the [Restaurant Recommender](01-types.
 
 ### Restaurant Recommender
 
-The exercise provided an early practical example of typing an array of objects before this module was reached
+The exercise provided an early practical example of typing an array of objects before this module was reached. The Rstarter code contained an array of restaurant objects. While debugging it, I introduced a `Restaurant` interface and annotated the array:
+
+```ts
+const restaurants: Restaurant[] = [
+  // restaurant objects
+];
 
 See [Types: Restaurant Recommender](01-types.md#restaurant-recommender)
 
