@@ -30,7 +30,47 @@ This question first arose while debugging the [Restaurant Recommender](01-types.
 
 ## C. Verification and further learning
 
-## D. Applied learning: mini-projects and debugging
+## D. Applied learning: portfolio website, mini-projects and debugging
+
+### Portfolio example [https://www.lcampbell.dev/ August 2026]
+
+The portfolio stores structured content in arrays of objects. TypeScript infers the shape of each object and the type of nested arrays.
+
+const courses = [
+  {
+    provider: "Code First Girls",
+    title: "CFGdegree Data and Software Engineering",
+    year: "2026",
+    summary: "Developed software with Python, SQL and REST APIs...",
+    topics: [
+      "APIs and microservices",
+      "Object-oriented programming",
+      "Data structures and libraries",
+    ],
+  },
+];
+
+From this value, TypeScript can infer that:
+
+courses is an array
+Each course is an object
+provider, title, year and summary are strings
+topics is an array of strings
+The course parameter inside .map() has the inferred course structure
+
+The experience, navLinks and principles arrays use the same pattern.
+
+TypeScript can infer the structure of the `courses` array from its initial objects. This is convenient for local static data, but the inferred structure describes what the objects currently contain rather than documenting what they are intended to contain.
+
+An explicit `Course` interface would be more useful if the data moved into another file, came from an API or allowed optional fields. For example, `year?: string` would document that a course may omit its year and would explain the conditional rendering in the template.
+
+Portfolio references:
+
+src/components/sections/TechEducation.astro
+src/components/sections/Experience.astro
+src/components/navigation/Header.astro
+src/components/sections/About.astro
+
 
 ### Restaurant Recommender
 

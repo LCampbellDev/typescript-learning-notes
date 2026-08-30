@@ -114,7 +114,87 @@ This question arose during the [Restaurant Recommender](01-types.md#restaurant-r
 
 - [TypeScript documentation: Object types](https://www.typescriptlang.org/docs/handbook/2/objects.html)
 
-## D. Applied learning: mini-projects and debugging
+## D. Applied learning: portfolio website, mini-projects and debugging
+
+### Portfolio example [https://www.lcampbell.dev/ August 2026]
+
+The portfolio uses an interface to describe the object accepted by BaseLayout.astro:
+
+interface Props {
+  title: string;
+  description?: string;
+  canonicalUrl?: string;
+}
+
+const {
+  title,
+  description = "L Campbell — Software engineer...",
+  canonicalUrl,
+} = Astro.props;
+
+The interface establishes a reusable contract:
+
+title is required
+description is optional
+canonicalUrl is optional
+Consumers receive editor suggestions and type checking
+Destructuring can provide defaults for missing optional values
+
+The inferred course structure could also be made explicit:
+
+interface Course {
+  provider: string;
+  title: string;
+  year?: string;
+  summary: string;
+  topics: string[];
+}
+
+const courses: Course[] = [
+  // Course objects
+];
+
+The header also supplies object types to generic DOM methods:
+
+const navLinks =
+  menu.querySelectorAll<HTMLAnchorElement>(
+    ".mobile-menu__nav-link",
+  );
+
+This tells TypeScript that each item in the returned collection is an HTMLAnchorElement, giving access to link-specific properties with type checking.
+
+TypeScript uses structural typing. A value satisfies the `Props` interface when it has the required property structure; it does not need to be created from a `Props` class.
+
+This suits Astro component properties because the component cares about the shape of the supplied data rather than how the object was created.
+
+#### Generic DOM element types
+
+If generics are not taught in this course module, then do **Further learning: generic DOM types** 
+
+The header uses a generic DOM method to specify the type of elements returned by a selector:
+
+```ts
+const navLinks =
+  menu.querySelectorAll<HTMLAnchorElement>(
+    ".mobile-menu__nav-link",
+  );
+
+HTMLAnchorElement is passed to querySelectorAll() as a generic type argument. TypeScript therefore gives the result the type:
+
+NodeListOf<HTMLAnchorElement>
+
+This means TypeScript knows that each item in navLinks is an anchor element and provides access to link-specific properties and methods.
+
+This demonstrates how existing object types can be supplied to generic functions to make their returned values more precise.
+
+
+
+Portfolio references:
+
+src/layouts/BaseLayout.astro
+src/components/sections/TechEducation.astro
+src/components/navigation/Header.astro
+
 
 ### Restaurant Recommender
 

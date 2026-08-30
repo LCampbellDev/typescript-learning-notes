@@ -318,7 +318,177 @@ This makes linting a useful later layer for SeedKeeper rather than another branc
 - Explore contract-testing approaches when SeedKeeper has a provider–consumer boundary
 - Explore TypeScript-aware ESLint rules when configuring the first personal TypeScript project
 
-## D. Applied learning: mini-projects and debugging
+## D. Applied learning: portfolio website, mini-projects and debugging
+
+### Portfolio example [https://www.lcampbell.dev/ August 2026]
+
+#### Narrowing browser API values
+
+My Astro portfolio uses browser APIs that can return more than one possible type. Type narrowing allows code to check a value at runtime before treating it as a more specific type.
+
+#### Theme preference validation + The anti-flash script in `<head>` in BaseLayout.astro 
+
+`BaseLayout.astro` contains an anti-flash script in the document `<head>`. It reads the saved theme and applies it before the page renders, preventing users from briefly seeing the wrong colour scheme (and flashing).
+
+The script uses `is:inline` because it needs to execute immediately rather than wait for a separate bundled file. Astro therefore sends it to the browser exactly as written and does not process its contents as TypeScript.
+
+Although this particular script is JavaScript, its validation logic provides a useful model for TypeScript narrowing. It checks data retrieved from browser localStorage before allowing that value to control the page theme:
+
+const saved = localStorage.getItem("theme");
+
+if (saved === "light" || saved === "dark") {
+  theme = saved;
+}
+
+localStorage.getItem() can return:
+
+string | null
+
+It returns a string when the key exists and null when it does not. The stored string could also contain an unexpected value.
+
+The condition checks that saved is specifically "light" or "dark". Inside the conditional block, the value has been narrowed from a general string | null to one of the two accepted values.
+
+The script uses is:inline, so Astro sends it to the browser as raw JavaScript rather than processing it as TypeScript. However, the runtime validation demonstrates the same narrowing logic that I could express explicitly in TypeScript:
+
+type Theme = "light" | "dark";
+
+const saved = localStorage.getItem("theme");
+
+if (saved === "light" || saved === "dark") {
+  const theme: Theme = saved;
+}
+
+The check protects the application from:
+
+A missing local storage value
+An unexpected stored string
+Assigning an invalid value to the theme
+Assuming that browser storage always contains valid application data
+
+A TypeScript version would provide stronger development-time checks, but the anti-flash requirement makes a small inline JavaScript script the more appropriate implementation. Runtime validation remains necessary in either language.
+
+Portfolio reference: src/layouts/BaseLayout.astro
+
+#### Narrowing a theme value
+
+The processed TypeScript script in Header.astro currently returns the theme as a general string:
+
+function getTheme(): string {
+  return (
+    document.documentElement.getAttribute("data-theme") ??
+    "light"
+  );
+}
+
+getAttribute() returns string | null. The nullish coalescing operator supplies "light" when the attribute is null, so the final result is always a string.
+
+A stricter future version could combine a literal union with narrowing:
+
+type Theme = "light" | "dark";
+
+function getTheme(): Theme {
+  const theme =
+    document.documentElement.getAttribute("data-theme");
+
+  if (theme === "dark") {
+    return theme;
+  }
+
+  return "light";
+}
+
+This version makes "light" and "dark" the only values that the function can return. It would also allow other theme functions to accept Theme instead of the broader string type:
+
+function updateToggleLabel(theme: Theme) {
+  const nextTheme: Theme =
+    theme === "dark" ? "light" : "dark";
+
+  // Update the visible and accessible labels
+}
+
+This would provide a small but meaningful improvement if the theme functionality became more complex.
+
+Portfolio reference: src/components/navigation/Header.astro
+
+#### DOM element assertions and narrowing
+
+The header script retrieves several required DOM elements:
+
+const toggle = document.getElementById(
+  "menu-toggle",
+) as HTMLButtonElement;
+
+Without the assertion, getElementById() returns:
+
+HTMLElement | null
+
+This is because TypeScript cannot know whether an element with that ID exists in the rendered page.
+
+The as HTMLButtonElement syntax is a type assertion. It tells TypeScript to treat the result as an HTMLButtonElement, but it does not check the value at runtime. A type assertion is therefore different from type narrowing.
+
+A runtime narrowing version would be:
+
+const toggle =
+  document.getElementById("menu-toggle");
+
+if (!(toggle instanceof HTMLButtonElement)) {
+  throw new Error("Menu toggle button not found");
+}
+
+toggle.focus();
+
+Before the instanceof check, toggle has the type:
+
+HTMLElement | null
+
+After the check, TypeScript knows that it is an:
+
+HTMLButtonElement
+
+The check handles both possibilities that would make the element unsuitable:
+
+The value is null
+The element exists but is not a button
+Implementation decision
+
+#### Implementation decision
+
+I considered replacing the header’s DOM assertions with runtime narrowing. I decided not to change them solely to demonstrate a TypeScript feature.
+
+The current assertions are proportionate because:
+
+The required elements and their script are defined together in Header.astro
+The elements are always rendered as part of the same static component
+Their IDs are controlled within the project
+The menu cannot function meaningfully if its required elements are absent
+Runtime checks would add code but could not restore missing header functionality
+
+The assertions therefore document an invariant: these elements must exist whenever the header script runs.
+
+I would reconsider this decision if:
+
+The header became reusable across substantially different layouts
+Any of the elements became conditional
+The script moved into a separate module
+External code supplied or modified the markup
+The application needed to recover gracefully when an element was absent
+
+This demonstrates that type narrowing is not something to add mechanically. The decision depends on the possible runtime states, the level of risk and whether the application can respond meaningfully when a check fails.
+
+Portfolio reference: src/components/navigation/Header.astro
+
+#### Learning summary
+
+This portfolio code helped me distinguish between three related approaches:
+
+Nullish coalescing provides a fallback when a value is null or undefined
+Type narrowing checks a runtime value before TypeScript treats it as a more specific type
+Type assertions tell TypeScript what type to assume without performing a runtime check
+
+The theme preference benefits from runtime validation because browser storage can contain missing or unexpected data. The required header elements use assertions because their presence is controlled by the same static component.
+
+The appropriate choice depends on the source of the value, the realistic failure states and whether additional runtime handling would improve the behaviour of the application.
+
 
 ## E. Seed Keeper connections and later exploration
 
