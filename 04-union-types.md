@@ -52,7 +52,44 @@ This connection arose during the Types module before the Union Types and Type Na
 
 - [TypeScript documentation: Union types](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#union-types)
 
-## D. Applied learning: mini-projects and debugging
+## D. Applied learning: portfolio website, mini-projects and debugging
+
+### Portfolio example (https://github.com/LCampbellDev/Portfolio [August 2026])
+
+Optional properties implicitly create union types. In BaseLayout.astro, the component’s Props interface includes optional properties:
+
+interface Props {
+  title: string;
+  description?: string;
+  canonicalUrl?: string;
+}
+
+These types can be understood as:
+
+description: string | undefined;
+canonicalUrl: string | undefined;
+
+The nullish coalescing operator provides a string when the optional value is absent:
+
+const canonical =
+  canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
+
+The theme feature could also use a literal union:
+
+type Theme = "light" | "dark";
+
+This is more precise than string because it prevents unrelated values such as "blue" from being used as themes.
+
+?? compared with ||
+The nullish coalescing operator uses the fallback only when `canonicalUrl` is `null` or `undefined`. The logical OR operator would also replace other falsy values such as an empty string, `0` or `false`.
+
+This matters when working with union types because it allows the code to handle absence without automatically rejecting every falsy value.
+
+Portfolio references:
+
+src/layouts/BaseLayout.astro
+src/components/navigation/Header.astro
+
 
 ## E. Seed Keeper connections and later exploration
 

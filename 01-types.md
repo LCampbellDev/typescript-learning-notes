@@ -288,7 +288,39 @@ npx tsx index.ts
 
 The first command checks types. The second executes the program
 
-## D. Applied learning: mini-projects and debugging
+## D. Applied learning: portfolio website, mini-projects and debugging
+
+### Portfolio example (https://github.com/LCampbellDev/Portfolio [August 2026])
+
+My Astro portfolio uses both inferred and explicitly declared types. TypeScript can infer simple types from assigned values, so declarations such as const SCROLL_THRESHOLD = 20 are understood as numbers without an annotation.
+
+I used explicit types when the expected value was less obvious, particularly when working with browser APIs:
+
+const toggle = document.getElementById(
+  "menu-toggle",
+) as HTMLButtonElement;
+
+function trapFocus(event: KeyboardEvent) {
+  // ...
+}
+
+function getTheme(): string {
+  return document.documentElement.getAttribute("data-theme") ?? "light";
+}
+
+These examples demonstrate:
+
+Type inference for strings, numbers and arrays
+DOM element types such as HTMLButtonElement
+Event types such as KeyboardEvent
+Explicit function return types
+
+TypeScript inference works particularly well for local values whose types are obvious from their initial values. For example, it can infer that `SCROLL_THRESHOLD` is a number and that `siteUrl` is a string.
+
+Explicit types become more valuable at boundaries, such as component properties, function parameters, browser APIs and external data. My portfolio therefore uses inference for simple internal values and explicit types where code interacts with Astro or the DOM.
+
+Portfolio reference: src/components/navigation/Header.astro
+
 
 ### Restaurant Recommender
 
