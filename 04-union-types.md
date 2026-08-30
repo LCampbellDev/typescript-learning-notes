@@ -54,7 +54,7 @@ This connection arose during the Types module before the Union Types and Type Na
 
 ## D. Applied learning: portfolio website, mini-projects and debugging
 
-### Portfolio example [https://www.lcampbell.dev/ August 2026]
+### Portfolio example (https://github.com/LCampbellDev/Portfolio [August 2026])
 
 Optional properties implicitly create union types. In BaseLayout.astro, the component’s Props interface includes optional properties:
 

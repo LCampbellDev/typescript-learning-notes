@@ -116,7 +116,7 @@ This question arose during the [Restaurant Recommender](01-types.md#restaurant-r
 
 ## D. Applied learning: portfolio website, mini-projects and debugging
 
-### Portfolio example [https://www.lcampbell.dev/ August 2026]
+### Portfolio example (https://github.com/LCampbellDev/Portfolio [August 2026])
 
 The portfolio uses an interface to describe the object accepted by BaseLayout.astro:
 

@@ -32,7 +32,7 @@ This question first arose while debugging the [Restaurant Recommender](01-types.
 
 ## D. Applied learning: portfolio website, mini-projects and debugging
 
-### Portfolio example [https://www.lcampbell.dev/ August 2026]
+### Portfolio example (https://github.com/LCampbellDev/Portfolio [August 2026])
 
 The portfolio stores structured content in arrays of objects. TypeScript infers the shape of each object and the type of nested arrays.
 

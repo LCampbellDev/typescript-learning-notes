@@ -290,7 +290,7 @@ The first command checks types. The second executes the program
 
 ## D. Applied learning: portfolio website, mini-projects and debugging
 
-### Portfolio example [https://www.lcampbell.dev/ August 2026]
+### Portfolio example (https://github.com/LCampbellDev/Portfolio [August 2026])
 
 My Astro portfolio uses both inferred and explicitly declared types. TypeScript can infer simple types from assigned values, so declarations such as const SCROLL_THRESHOLD = 20 are understood as numbers without an annotation.
 

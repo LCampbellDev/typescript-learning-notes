@@ -12,7 +12,7 @@ __Course status__: Not started
 
 ## D. Applied learning: portfolio website, mini-projects and debugging
 
-### Portfolio example [https://www.lcampbell.dev/ August 2026]
+### Portfolio example (https://github.com/LCampbellDev/Portfolio [August 2026])
 
 The portfolio uses function declarations, arrow functions and callback functions. TypeScript can check function parameters and return values while often inferring types from context.
 
